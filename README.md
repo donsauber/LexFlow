@@ -116,9 +116,9 @@ Every FlowLex entry can be expressed through sight, sound, text, or touch—brid
 
 ## 6. Repository Layout
 
-/spec/FlowLex_Spec.copr # Core specification
+/spec/FlowLex_Spec.copr   # Core specification
 /examples/FlowLex_English_Sample.copr
-/tools/parser.py # Minimal parser / validator
+/tools/parser.py     # Minimal parser / validator
 /LICENSE # CC BY-SA 4.0 + MIT for code
 
 ---
@@ -138,6 +138,7 @@ for line in Path("examples/FlowLex_English_Sample.copr").read_text().splitlines(
     vector = np.fromstring(vec, sep=",")
     print(code, word, vector[:3])
 ```
+---
 
 ## 8. Contributing
 FlowLex is designed for open collaboration.
@@ -151,6 +152,7 @@ Building visualization or editing tools.
 
 All contributions remain open and attributed under the repository license.
 
+---
 
 ## 9. License
 Text and Data: CC BY-SA 4.0
