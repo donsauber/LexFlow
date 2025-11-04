@@ -1,0 +1,80 @@
+{== FlowLex Specification ==}
+
+[Header]
+spec_version: 1.0
+author: Don Sauber
+format_type: Copper (.copr)
+description: "Defines the core file structure, field order, and parsing rules for FlowLex semantic dictionaries."
+
+[File_Structure]
+# Each FlowLex file begins with a header describing context and vector dimensions.
+# The main body consists of category sections (Base, Feature, Template, etc.).
+# Each entry is a single line following the Field Order rule.
+
+sections:
+  - [Header]  -> metadata for language, vector settings, license
+  - [Base]    -> core word stems and their vectors
+  - [Feature] -> morphological or grammatical modifiers
+  - [Template]-> idiomatic or code pattern macros
+  - [Accessibility] -> optional global accessibility defaults
+
+[Header_Fields]
+required:
+  - language: name of language or code domain (English, Python, etc.)
+  - version: file version of this FlowLex
+  - vector_dim: integer, number of vector dimensions
+  - encoding: datatype of vectors (float32 recommended)
+optional:
+  - license: text identifier for usage license
+  - description: summary of content
+
+[Entry_Format]
+# Standard FlowLex entry
+pattern: code : word : alt_text : sign_code : speech_hint = vector_list
+rules:
+  - fields are separated by ":" up to five fields before "="
+  - everything after "=" is machine data (comma-separated floats)
+  - empty fields use "-" as placeholder
+  - trailing spaces are ignored
+example:
+  B1: run : to move quickly on foot : ASL_RUN : rhymes with sun = 0.12, -0.04, 0.33, 0.21
+
+[Unicode_Handling]
+- Single Unicode characters are treated as intrinsic tokens; no new FL code needed.
+- Punctuation or emoji may optionally have explicit entries for accessibility metadata.
+example:
+  P1: . : full stop : ASL_PERIOD : end of sentence = 0.00, 0.00, 0.00, 0.00
+
+[Delimiters]
+field_delimiter: ":"
+machine_delimiter: "="
+comment_prefix: "#"
+section_start: "{=="
+section_end: "==}"
+newline_terminated: true
+
+[Accessibility_Fields]
+# Optional fields that may appear between sign_code and "="
+additional_fields:
+  - alt_text: for screen readers
+  - sign_code: sign language identifier
+  - speech_hint: pronunciation, rhyme, or stress marker
+  - palette_id: reference to color accessibility scheme (optional future)
+
+[Parsing_Guidelines]
+- Parsers read line by line.
+- Split once at "=" to isolate vector data.
+- Split left part by ":" into up to five fields.
+- Ignore blank lines and comment lines beginning with "#".
+- Maintain numeric order of codes (B1, B2, …).
+- Store vectors as arrays of float32.
+
+[Validation_Rules]
+- Check header presence and field completeness.
+- Verify vector length equals `vector_dim`.
+- Ensure unique code IDs per section.
+- Allow Unicode characters beyond ASCII.
+- Optional: warn if accessibility fields are empty but declared in header.
+
+[License]
+CC-BY-SA-4.0
